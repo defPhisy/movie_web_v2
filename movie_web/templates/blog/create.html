@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}New Movie{% endblock %}</h1>
+{% endblock %}
+
+
+
+{% block content %}
+<form name="add_movie" method="post">
+    <label for="title">Title</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}">
+    <label for="year">Year</label>
+    <input name="year" id="year" value="{{ request.form['year'] }}">
+    <label for="imdb_id">IMDB-ID</label>
+    <input name="imdb_id" id="imdb_id" value="{{ request.form['imdb_id'] }}">
+    <input type="submit" value="Get Movie">
+</form>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+
+
+{% block content %}
+<article style="background-image: url('{{ movie.poster_link }}');">
+
+    <div>
+        <div class="movie_nav">
+            <form action="{{ url_for('blog.update_movie', movie_id=movie.id) }}" method="get">
+                <input type="submit" class="button" value="Edit">
+            </form>
+            <form action="{{ url_for('blog.refresh_movie', movie_id=movie['id']) }}" method="post">
+                <input class="button" type="submit" value="Refresh">
+            </form>
+            <form action="{{ url_for('blog.delete_movie', movie_id=movie['id']) }}" method="post">
+                <input class="button danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+            </form>
+        </div>
+
+        <div class="container">
+            <header>
+                <div>
+                    <h1>{% block title %} {{ movie.title }} {% endblock %}</h1>
+                    <div>from {{ movie.year }}</div>
+                </div>
+            </header>
+            <div class="details">
+                <p>Genre: {{ movie.genre }}</p>
+                <p>Stars: {{ movie.stars }}</p>
+                <p>Director: {{ movie.director }}</p>
+                <p>Writer: {{ movie.writer }}</p>
+            </div>
+            <p class="plot">{{ movie.plot }}</p>
+        </div>
+    </div>
+
+    <div class="poster">
+        <img src="{{ movie.poster_link }}" alt="Movie-Cover: {{ movie.title }}">
+        <p>
+            {# Full stars #}
+            {% for _ in range(stars.full) %}
+            <i class="fa-solid fa-star"></i>
+            {% endfor %}
+
+            {# Half star #}
+            {% if stars.half %}
+            <i class="fa-regular fa-star-half-stroke"></i>
+            {% endif %}
+
+            {# Empty stars #}
+            {% for _ in range(stars.empty) %}
+            <i class="fa-regular fa-star"></i>
+            {% endfor %}
+        </p>
+    </div>
+
+</article>
+
+<section class="reviews">
+    {% if not user_review %}
+    <form action="{{ url_for('blog.add_review', movie_id=movie['id']) }}" method="post">
+        <input class="button" type="submit" value="Review">
+    </form>
+    {% endif %}
+
+    {% for review in movie.reviews %}
+    <div class="review">
+        <p>from {{ review.user.user_name }}</p>
+
+        {% if user_review and review.user.id == g.user.id %}
+        <p>Edit</p>
+        {% endif %}
+
+
+        <p>{{ review.text }}</p>
+    </div>
+    {% endfor %}
+
+</section>
+{% endblock %}
