@@ -80,10 +80,15 @@ def movie_details(movie_id):
         (review for review in g.user.reviews if review.movie_id == movie_id),
         None,
     )
-    stars = utils.calculate_imdb_stars(movie.imdb_rating)  # type: ignore
+    imdb_stars = utils.calculate_imdb_stars(movie.imdb_rating)  # type: ignore
+    genres = movie.genre.split(",")
 
     return render_template(
-        "blog/movie.html", movie=movie, user_review=user_review, stars=stars
+        "blog/movie.html",
+        movie=movie,
+        user_review=user_review,
+        stars=imdb_stars,
+        genres=genres,
     )
 
 
@@ -118,6 +123,9 @@ def delete_movie(movie_id):
     g.user.movies.remove(movie)
     db.session.commit()
 
+    message = f"{movie.title} deleted! successfully!"
+    flash(message=message, category="info")
+
     return redirect(url_for("blog.index"))
 
 
@@ -140,7 +148,7 @@ def add_review(movie_id):
         user_id=g.user.id,  # type: ignore
         movie_id=movie_id,  # type: ignore
         text="test",  # type: ignore
-        rating=4,  # type: ignore
+        rating=3.6,  # type: ignore
         created=datetime.now(timezone.utc),  # type: ignore
     )
 
@@ -148,3 +156,18 @@ def add_review(movie_id):
     db.session.commit()
 
     return redirect(url_for("blog.index"))
+
+
+@bp.route("/review/<int:review_id>/update", methods=("POST",))
+def update_review(review_id):
+    pass
+
+
+@bp.route("/review/<int:review_id>/delete", methods=("POST",))
+def delete_review(review_id):
+    pass
+
+
+@bp.route("/review/<int:review_id>/delete", methods=("POST",))
+def like_review(review_id):
+    pass
