@@ -1,6 +1,7 @@
 import os
 
-from flask import Flask
+from dotenv import load_dotenv
+from flask import Flask, g
 
 from . import auth, blog, db_models
 
@@ -8,6 +9,10 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_FOLDER = "./data"
 DB_NAME = "movie_web.sqlite"
 DB_PATH = os.path.join(ROOT_PATH, DB_FOLDER, DB_NAME)
+
+
+load_dotenv()
+font_awesome_key = os.getenv("FONT_AWESOME_KEY")
 
 
 def create_app(test_config=None):
@@ -38,6 +43,10 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     app.register_blueprint(blog.bp)
     app.add_url_rule("/", endpoint="index")
+
+    @app.context_processor
+    def inject_fontawesome_key():
+        return dict(fontawesome_key=font_awesome_key)
 
     # a simple page that says hello
     @app.route("/hello")
