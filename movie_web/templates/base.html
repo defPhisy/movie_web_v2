@@ -1,25 +1,43 @@
-<!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="https://kit.fontawesome.com/f26c72a963.js" crossorigin="anonymous"></script>
-<nav>
-    <h1>{{ g.user.user_name }}</h1>
-    <ul>
-        {% if g.user %}
-        <li><span>{{ g.user['username'] }}</span>
-        <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-            {% else %}
-        <li><a href="{{ url_for('auth.register') }}">Register</a>
-        <li><a href="{{ url_for('auth.login') }}">Log In</a>
-            {% endif %}
-    </ul>
-</nav>
-<section class="content">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-</section>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Flick Club</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/{{ fontawesome_key }}.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=roboto:100,300,400,500,700,900|vollkorn:400,500,600,700,800,900"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background">
+
+        <nav>
+            <h1>{{ g.user.user_name }}</h1>
+            <ul>
+                {% if g.user %}
+                <li><span>{{ g.user['username'] }}</span>
+                <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+                    {% else %}
+                <li><a href="{{ url_for('auth.register') }}">Register</a>
+                <li><a href="{{ url_for('auth.login') }}">Log In</a>
+                    {% endif %}
+            </ul>
+        </nav>
+        <section class="content">
+            <header>
+                {% block header %}{% endblock %}
+            </header>
+            {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </section>
+    </div>
+</body>
+
+</html>

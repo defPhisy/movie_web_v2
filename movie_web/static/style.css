@@ -1,4 +1,4 @@
-html {
+/* html {
   font-family: sans-serif;
   background: #1a1a1a;
   padding: 1rem;
@@ -8,11 +8,11 @@ body {
   margin: 0 auto;
   background: white;
 }
-/* h1 {
+h1 {
   font-family: serif;
   color: #377ba8;
   margin: 1rem 0;
-} */
+}
 a {
   color: #377ba8;
 }
@@ -110,7 +110,7 @@ input[type="submit"] {
   align-self: start;
   min-width: 10em;
 }
-/* ----------------------------------------------------------------- */
+
 article {
   background-repeat: no-repeat;
   background-size: 100%;
@@ -182,6 +182,7 @@ article {
 .movie_nav {
   display: flex;
   gap: 1rem;
+  justify-content: flex-end;
 }
 
 .review {
@@ -189,4 +190,261 @@ article {
   padding: 2rem;
   margin-block: 2rem;
   border-radius: 0.5rem;
+} */
+
+/* Custom CSS Reset
+based on Josh Comeau's CSS Reset: https://www.joshwcomeau.com/css/custom-css-reset/
+and Andy Bell's Modern CSS Reset: https://piccalil.li/blog/a-more-modern-css-reset/ */
+:root {
+  --card-width: 650px;
+  --dark-bg: #050505;
+  --yellow-bg: #e5b468;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+/* -webkit... only for Safari and MacOS with retina display */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  background-image: url("data:image/svg+xml,%3C!-- svg: first layer --%3E%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* makes sure to use same font-family, font-size and font-weight for all elements */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+.background {
+  background: linear-gradient(
+    rgba(255, 194, 95, 0.795) 0%,
+    rgba(0, 0, 0, 0.968) 80%
+  );
+  min-height: 100vh;
+}
+article {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.85);
+  background-blend-mode: multiply;
+  border-radius: 0.5em 0.5em 0 0;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 2rem;
+  margin: 2rem;
+  margin-block-end: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+  text-shadow: 0 0 20px #000000;
+  max-width: var(--card-width);
+  margin-inline: auto;
+
+  .movie-nav {
+    display: flex;
+    gap: 0.2em;
+    justify-content: center;
+  }
+  .movie-title {
+    font-family: "Helvetica Neue";
+    font-size: calc(70vw / 10);
+    font-size: clamp(0.5rem, 6vw, 3rem);
+    word-wrap: break-word;
+    color: white;
+  }
+
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 4em;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .movie-year {
+    font-size: 2.2em;
+    font-family: "Vollkorn", sans-serif;
+    font-weight: 600;
+  }
+
+  .rating {
+    margin-block-end: 0.5em;
+    font-size: 1.4em;
+    color: #f2d753;
+  }
+
+  .links {
+    display: flex;
+    gap: 0.5em;
+    margin-block-end: 1em;
+  }
+
+  .details {
+    margin-block-end: 1em;
+    opacity: 0.85;
+
+    .creators {
+      display: flex;
+      gap: 1em;
+    }
+
+    div > .key {
+      font-weight: bold;
+    }
+  }
+
+  .genre {
+    margin-block-end: 1em;
+    span {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding-inline: 0.4em;
+      border-radius: 0.2em;
+    }
+  }
+  .plot {
+    font-size: 1em;
+    font-weight: 500;
+    opacity: 0.85;
+    /* font-family: "Vollkorn"; */
+  }
+
+  /* img {
+    aspect-ratio: 2 / 3;
+    width: 10rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 12px black;
+    align-self: center;
+  } */
+}
+
+.reviews {
+  margin-inline: 2rem;
+  margin-block-end: 3rem;
+  padding: 2rem;
+  padding-block-start: 1em;
+  background: linear-gradient(rgb(20, 20, 20), #050505);
+  border-radius: 0 0 0.5em 0.5em;
+  max-width: var(--card-width);
+  margin-inline: auto;
+}
+
+.new-review {
+  display: flex;
+  justify-content: center;
+  margin-block-end: 1em;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  width: 100%;
+
+  form {
+    width: 100%;
+  }
+  .button {
+    width: 100%;
+  }
+}
+
+.review {
+  margin-block-end: 2.5em;
+  color: white;
+  font-family: sans-serif;
+  font-size: 0.85em;
+
+  header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: baseline;
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      margin-block-end: 1em;
+    }
+
+    .user > h2 {
+      font-size: 1.2em;
+      color: #ffffff;
+    }
+    .user > i {
+      font-size: 1.35em;
+    }
+
+    .user-rating {
+      justify-self: center;
+    }
+
+    form {
+      justify-self: flex-end;
+    }
+  }
+
+  .review-nav {
+    display: inline-flex;
+    gap: 0.2em;
+    justify-self: flex-end;
+  }
+
+  .fa-quote-left {
+    font-size: 2.5em;
+    margin-inline-end: 0.3em;
+  }
+  p {
+    display: inline;
+    color: #dbdbdb;
+    font-family: "Vollkorn";
+    font-size: 1.25em;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgb(86, 86, 86);
+  margin-inline: auto;
+  margin-block-end: 1.5em;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  background-color: #040404;
+  color: #727272;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e5b468;
+    color: rgb(9, 9, 9);
+  }
+}
+.danger:hover {
+  background-color: rgb(229, 104, 104);
+}
+
+.liked button {
+  color: rgb(229, 104, 104);
 }
