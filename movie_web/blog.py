@@ -53,7 +53,7 @@ def create():
             error = "Title already in your library"
 
         if error is not None:
-            flash(error)
+            flash(message=error, category="error")
         else:
             requested_movie = omdb_api.get_movie(
                 title=title, year=year, imdb_id=imdb_id
@@ -67,6 +67,8 @@ def create():
                 db_manager.add_movie_to_user(g.user, new_movie)
             else:
                 db_manager.add_movie_to_user(g.user, existing_movie)
+            message = f"Movie {new_movie.title} added!"
+            flash(message=message, category="info")
 
             return redirect(url_for("blog.index"))
 
@@ -102,7 +104,7 @@ def update_movie(movie_id):
         error = db_manager.check_for_errors(request.form)
 
         if error is not None:
-            flash(error)
+            flash(message=error, category="error")
         else:
             db_manager.update_movie(movie, request.form)
             db.session.commit()
@@ -123,8 +125,8 @@ def delete_movie(movie_id):
     g.user.movies.remove(movie)
     db.session.commit()
 
-    message = f"{movie.title} deleted! successfully!"
-    flash(message=message, category="info")
+    message = f"{movie.title} deleted!"
+    flash(message=message, category="delete")
 
     return redirect(url_for("blog.index"))
 
