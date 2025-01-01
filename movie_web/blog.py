@@ -108,7 +108,7 @@ def update_movie(movie_id):
         else:
             db_manager.update_movie(movie, request.form)
             db.session.commit()
-            return redirect(url_for("blog.movie_details", movie_id=movie.id))
+            return redirect(url_for("blog.movie_details", movie_id=movie.id)) # type: ignore
 
     return render_template(
         "blog/update.html",
@@ -141,7 +141,7 @@ def refresh_movie(movie_id):
 
     db_manager.refresh_movie(movie, refreshed_movie)
 
-    return redirect(url_for("blog.movie_details", movie_id=movie.id))
+    return redirect(url_for("blog.movie_details", movie_id=movie.id)) # type: ignore
 
 
 @bp.route("/movie/<int:movie_id>/review", methods=("GET", "POST"))
@@ -174,7 +174,7 @@ def update_review(review_id):
         db_manager.update_review(review)
 
         return redirect(
-            url_for("blog.movie_details", movie_id=review.movie_id)
+            url_for("blog.movie_details", movie_id=review.movie_id) # type: ignore
         )
 
     return render_template(
@@ -189,11 +189,11 @@ def delete_review(review_id):
     db_manager.delete_review(review)
     flash(f"Deleted Review from {g.user.user_name}!", category="delete")
 
-    return redirect(url_for("blog.movie_details", movie_id=review.movie_id))
+    return redirect(url_for("blog.movie_details", movie_id=review.movie_id)) # type: ignore
 
 
 @bp.route("/review/<int:review_id>/like", methods=("POST",))
 def like_review(review_id):
     review = db_manager.get_review_by_id(review_id)
 
-    return redirect(url_for("blog.movie_details", movie_id=review.movie_id))
+    return redirect(url_for("blog.movie_details", movie_id=review.movie_id)) # type: ignore

@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, g
+from flask import Flask
 
 from . import auth, blog, db_models
 
