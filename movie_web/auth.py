@@ -10,10 +10,11 @@ from flask import (
     session,
     url_for,
 )
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from movie_web.db_models import User, db
 from movie_web.db_manager import get_user_by_name
+from movie_web.db_models import User, db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -59,12 +60,13 @@ def register():
                 new_user = User(user_name=username, password=hashed_pw)  # type: ignore
                 db.session.add(new_user)
                 db.session.commit()
-            except db.IntegrityError:
+            except IntegrityError:
                 error = f"User {username} is already registered."
+                db.session.rollback()
             else:
                 return redirect(url_for("auth.login"))
 
-        flash(error)
+        flash(message=error, category="error")
 
     return render_template("auth/register.html")
 
@@ -100,7 +102,7 @@ def login():
             session["user_id"] = user.id  # type: ignore
             return redirect(url_for("index"))
 
-        flash(error)
+        flash(message=error, category="error")
 
     return render_template("auth/login.html")
 
