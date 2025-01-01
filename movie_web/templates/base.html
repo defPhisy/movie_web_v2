@@ -17,23 +17,36 @@
     <div class="background">
 
         <nav>
-            <h1>{{ g.user.user_name }}</h1>
-            <ul>
-                {% if g.user %}
-                <li><span>{{ g.user['username'] }}</span>
-                <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-                    {% else %}
-                <li><a href="{{ url_for('auth.register') }}">Register</a>
-                <li><a href="{{ url_for('auth.login') }}">Log In</a>
-                    {% endif %}
-            </ul>
+            <div class="nav-container">
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-circle-user"></i> {{ g.user.user_name }}
+                    </li>
+                    {% if g.user %}
+                    <li><span>{{ g.user['username'] }}</span>
+                    <li class="button danger"><a href="{{ url_for('auth.logout') }}">Log Out</a>
+                        {% else %}
+                    <li><a class="button" href="{{ url_for('auth.register') }}">Register</a>
+                    <li><a class="button" href="{{ url_for('auth.login') }}">Log In</a>
+                        {% endif %}
+                </ul>
+                <div class="login-form">
+                    {% block login %}{% endblock %}
+                </div>
+            </div>
+
+
         </nav>
         <section class="content">
             <header>
                 {% block header %}{% endblock %}
             </header>
-            {% for message in get_flashed_messages() %}
-            <div class="flash">{{ message }}</div>
+            {% for category, message in get_flashed_messages(with_categories=True) %}
+
+            <div class="flash {{ category }}">{{ message }}</div>
+
+
+
             {% endfor %}
             {% block content %}{% endblock %}
         </section>
