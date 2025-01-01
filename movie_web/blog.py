@@ -83,7 +83,7 @@ def movie_details(movie_id):
         None,
     )
     imdb_stars = utils.calculate_imdb_stars(movie.imdb_rating)  # type: ignore
-    genres = movie.genre.split(",")
+    genres = movie.genre.split(",")  # type: ignore
 
     return render_template(
         "blog/movie.html",
@@ -108,7 +108,7 @@ def update_movie(movie_id):
         else:
             db_manager.update_movie(movie, request.form)
             db.session.commit()
-            return redirect(url_for("blog.index"))
+            return redirect(url_for("blog.movie_details", movie_id=movie.id))
 
     return render_template(
         "blog/update.html",
@@ -125,7 +125,7 @@ def delete_movie(movie_id):
     g.user.movies.remove(movie)
     db.session.commit()
 
-    message = f"{movie.title} deleted!"
+    message = f"{movie.title} deleted!"  # type: ignore
     flash(message=message, category="delete")
 
     return redirect(url_for("blog.index"))
@@ -141,7 +141,7 @@ def refresh_movie(movie_id):
 
     db_manager.refresh_movie(movie, refreshed_movie)
 
-    return redirect(url_for("blog.index"))
+    return redirect(url_for("blog.movie_details", movie_id=movie.id))
 
 
 @bp.route("/movie/<int:movie_id>/review", methods=("POST",))
