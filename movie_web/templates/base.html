@@ -20,7 +20,8 @@
             <div class="nav-container">
                 <ul>
                     <li>
-                        <i class="fa-solid fa-circle-user"></i> {{ g.user.user_name }}
+                        <a href="{{ url_for('blog.index')}}" class="home"><i class="fa-solid fa-circle-user"></i> {{
+                            g.user.user_name }}</a>
                     </li>
                     {% if g.user %}
                     <li><span>{{ g.user['username'] }}</span>
