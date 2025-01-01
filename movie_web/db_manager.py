@@ -1,9 +1,10 @@
 from typing import Sequence
 
+from flask import request
 from sqlalchemy import select
 from sqlalchemy.inspection import inspect
 
-from movie_web.db_models import Movie, User, db
+from movie_web.db_models import Movie, Review, User, db
 
 REQUIRED_MOVIE_KEYS = [column.key for column in inspect(Movie).attrs][3:]  # type: ignore
 
@@ -11,9 +12,6 @@ REQUIRED_MOVIE_KEYS = [column.key for column in inspect(Movie).attrs][3:]  # typ
 def get_user_by_name(name) -> User | None:
     stmt = select(User).where(User.user_name == name)
     user = db.session.scalar(stmt)
-    print(user)
-    if user:
-        print(user.movies)
     return user
 
 
@@ -56,7 +54,6 @@ def refresh_movie(movie, refreshed_movie):
 
 def check_for_errors(form_data) -> str | None:
     data = form_data.to_dict()
-    print("DATA:", data)
 
     for key in REQUIRED_MOVIE_KEYS:
         if key not in data:
@@ -110,6 +107,22 @@ def serialize_omdb_movie(omdb_response: dict) -> Movie:
     return new_movie
 
 
+def get_review_by_id(review_id):
+    return db.session.get(Review, review_id)
+
+
 def add_review(review):
     db.session.add(review)
     db.session.commit()
+
+
+def update_review(review):
+    data = request.form.to_dict()
+    for key, value in data.items():
+        setattr(review, key, value)
+    db.session.commit()
+
+def delete_review(review):
+    db.session.delete(review)
+    db.session.commit()
+    

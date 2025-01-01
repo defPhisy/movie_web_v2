@@ -144,32 +144,56 @@ def refresh_movie(movie_id):
     return redirect(url_for("blog.movie_details", movie_id=movie.id))
 
 
-@bp.route("/movie/<int:movie_id>/review", methods=("POST",))
+@bp.route("/movie/<int:movie_id>/review", methods=("GET", "POST"))
 def add_review(movie_id):
-    new_review = Review(
-        user_id=g.user.id,  # type: ignore
-        movie_id=movie_id,  # type: ignore
-        text="test",  # type: ignore
-        rating=3.6,  # type: ignore
-        created=datetime.now(timezone.utc),  # type: ignore
-    )
+    movie = db_manager.get_movie_by_id(movie_id)
 
-    db_manager.add_review(new_review)
-    db.session.commit()
+    if request.method == "POST":
+        new_review = Review(
+            user_id=g.user.id,  # type: ignore
+            movie_id=movie_id,  # type: ignore
+            text=request.form["text"],  # type: ignore
+            rating=request.form["rating"],  # type: ignore
+            created=datetime.now(timezone.utc),  # type: ignore
+        )
 
-    return redirect(url_for("blog.index"))
+        db_manager.add_review(new_review)
+        flash(f"New Review by {g.user.user_name} created!", category="info")
+
+        return redirect(url_for("blog.movie_details", movie_id=movie_id))
+
+    return render_template("blog/add_review.html", movie=movie)
 
 
-@bp.route("/review/<int:review_id>/update", methods=("POST",))
+@bp.route("/review/<int:review_id>/update", methods=("GET", "POST"))
 def update_review(review_id):
-    pass
+    review = db_manager.get_review_by_id(review_id)
+    g.now = datetime.now()
+
+    if request.method == "POST":
+        db_manager.update_review(review)
+
+        return redirect(
+            url_for("blog.movie_details", movie_id=review.movie_id)
+        )
+
+    return render_template(
+        "blog/update_review.html",
+        review=review,
+    )
 
 
 @bp.route("/review/<int:review_id>/delete", methods=("POST",))
 def delete_review(review_id):
-    pass
+    review = db_manager.get_review_by_id(review_id)
+    db_manager.delete_review(review)
+    flash(f"Deleted Review from {g.user.user_name}!", category="delete")
+
+    return redirect(url_for("blog.movie_details", movie_id=review.movie_id))
 
 
-@bp.route("/review/<int:review_id>/delete", methods=("POST",))
+@bp.route("/review/<int:review_id>/like", methods=("POST",))
 def like_review(review_id):
-    pass
+    review = db_manager.get_review_by_id(review_id)
+
+    return redirect(url_for("blog.movie_details", movie_id=review.movie_id))

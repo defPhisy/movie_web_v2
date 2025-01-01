@@ -61,7 +61,7 @@ class Review(db.Model):
     movie_id: Mapped[int] = mapped_column(ForeignKey("movie.id"))
     text: Mapped[Optional[str]]
     rating: Mapped[float] = mapped_column(
-        CheckConstraint("rating >= 1 AND rating <= 5")
+        CheckConstraint("rating >= 0 AND rating <= 5")
     )
     created: Mapped[datetime] = mapped_column(
         default=datetime.now(timezone.utc)
@@ -84,4 +84,3 @@ class UserMovie(db.Model):
     movie_id: Mapped[int] = mapped_column(
         ForeignKey("movie.id"), primary_key=True
     )
-    # Note: No relationships needed here, as they are managed by 'User' and 'Movie'

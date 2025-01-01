@@ -100,7 +100,7 @@
     <!-- Add Review Button appears only when user has not reviewed movie yet -->
     <div class="new-review">
         {% if not user_review %}
-        <form action="{{ url_for('blog.add_review', movie_id=movie['id']) }}" method="post">
+        <form action="{{ url_for('blog.add_review', movie_id=movie['id']) }}" method="get">
             <button class="button" type="submit">Add Review</button>
         </form>
         {% endif %}
@@ -145,7 +145,7 @@
 
                 {% if user_review and review.user.id == g.user.id %}
                 <!-- Update Review Button -->
-                <form action="{{ url_for('blog.update_review', review_id=review.id) }}" method="post">
+                <form action="{{ url_for('blog.update_review', review_id=review.id) }}" method="get">
                     <button class="button" type="submit">
                         <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                     </button>
