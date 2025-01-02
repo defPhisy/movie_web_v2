@@ -13,7 +13,6 @@ DB_PATH = os.path.join(ROOT_PATH, DB_FOLDER, DB_NAME)
 
 load_dotenv()
 font_awesome_key = os.getenv("FONT_AWESOME_KEY")
-print("KEY:", font_awesome_key)
 flask_secret_key = os.getenv("FLASK_SECRET_KEY")
 
 
@@ -23,19 +22,6 @@ def create_app(test_config=None):
         SECRET_KEY=flask_secret_key,
         SQLALCHEMY_DATABASE_URI=f"sqlite:///{DB_PATH}",
     )
-
-    # if test_config is None:
-    #     # load the instance config, if it exists, when not testing
-    #     app.config.from_pyfile("config.py", silent=True)
-    # else:
-    #     # load the test config if passed in
-    #     app.config.from_mapping(test_config)
-
-    # # ensure the instance folder exists
-    # try:
-    #     os.makedirs(app.instance_path)
-    # except OSError:
-    #     pass
 
     db_models.db.init_app(app)
 

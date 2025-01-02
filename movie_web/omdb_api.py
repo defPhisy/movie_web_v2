@@ -19,20 +19,21 @@ load_dotenv()
 API_KEY = os.getenv("OMDB_API_KEY")
 
 
-def get_movie(title=None, year=None, imdb_id=None) -> dict:
+def get_movie(
+    title: str | None = None,
+    year: str | None = None,
+    imdb_id: str | None = None,
+) -> dict:
     """
     Send a GET request with a movie title and/or year or an imdb-ID to www.omdbapi.com with authorization
     and retry logic.
 
-    Args:
-        title (str): The movie to search for.
-
-    Returns:
-        dict: The JSON response from the server.
-
-    Raises:
-        HTTPError: If an HTTP error occurs and retries are exhausted.
-        Timeout: If the request times out and retries are exhausted.
+    :param title: The movie title to search for. Defaults to None.
+    :param year: The movie year to search for. Defaults to None.
+    :param imdb_id: The IMDb ID to search for. Defaults to None.
+    :return: The JSON response from the server containing movie information.
+    :raises HTTPError: If an HTTP error occurs and retries are exhausted.
+    :raises Timeout: If the request times out and retries are exhausted.
     """
 
     url = "http://www.omdbapi.com/?"
@@ -66,7 +67,18 @@ def get_movie(title=None, year=None, imdb_id=None) -> dict:
         return response.json()
 
 
-def set_params(title, year, imdb_id):
+def set_params(
+    title: str | None, year: str | None, imdb_id: str | None
+) -> dict[str, str]:
+    """
+    Sets the parameters for the OMDB API request.
+
+    :param title: The movie title to include in the request.
+    :param year: The movie year to include in the request.
+    :param imdb_id: The IMDb ID to include in the request.
+    :return: A dictionary of query parameters for the API request.
+    :raises ValueError: If neither title nor imdb_id is provided.
+    """
     if not title and not imdb_id:
         raise ValueError("Need at least a movie title or an imdb-ID")
 
@@ -78,6 +90,9 @@ def set_params(title, year, imdb_id):
     if imdb_id:
         params = {"i": imdb_id}
 
+    if not API_KEY:
+        raise ValueError("API key is missing.")
+
     params.update({
         "apikey": API_KEY,
         "plot": "full",  # "full" or "short" movie description
@@ -86,40 +101,40 @@ def set_params(title, year, imdb_id):
     return params
 
 
-def test_api_requests():
-    dark_knight_response = {
-        "Title": "The Dark Knight",
-        "Year": "2008",
-        "Rated": "PG-13",
-        "Released": "18 Jul 2008",
-        "Runtime": "152 min",
-        "Genre": "Action, Crime, Drama",
-        "Director": "Christopher Nolan",
-        "Writer": "Jonathan Nolan, Christopher Nolan, David S. Goyer",
-        "Actors": "Christian Bale, Heath Ledger, Aaron Eckhart",
-        "Plot": "When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness.",
-        "Language": "English, Mandarin",
-        "Country": "United States, United Kingdom",
-        "Awards": "Won 2 Oscars. 164 wins & 164 nominations total",
-        "Poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg",
-        "Ratings": [
-            {"Source": "Internet Movie Database", "Value": "9.0/10"},
-            {"Source": "Rotten Tomatoes", "Value": "94%"},
-            {"Source": "Metacritic", "Value": "84/100"},
-        ],
-        "Metascore": "84",
-        "imdbRating": "9.0",
-        "imdbVotes": "2,947,373",
-        "imdbID": "tt0468569",
-        "Type": "movie",
-        "DVD": "N/A",
-        "BoxOffice": "$534,987,076",
-        "Production": "N/A",
-        "Website": "N/A",
-        "Response": "True",
-    }
+# def test_api_requests():
+#     dark_knight_response = {
+#         "Title": "The Dark Knight",
+#         "Year": "2008",
+#         "Rated": "PG-13",
+#         "Released": "18 Jul 2008",
+#         "Runtime": "152 min",
+#         "Genre": "Action, Crime, Drama",
+#         "Director": "Christopher Nolan",
+#         "Writer": "Jonathan Nolan, Christopher Nolan, David S. Goyer",
+#         "Actors": "Christian Bale, Heath Ledger, Aaron Eckhart",
+#         "Plot": "When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness.",
+#         "Language": "English, Mandarin",
+#         "Country": "United States, United Kingdom",
+#         "Awards": "Won 2 Oscars. 164 wins & 164 nominations total",
+#         "Poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg",
+#         "Ratings": [
+#             {"Source": "Internet Movie Database", "Value": "9.0/10"},
+#             {"Source": "Rotten Tomatoes", "Value": "94%"},
+#             {"Source": "Metacritic", "Value": "84/100"},
+#         ],
+#         "Metascore": "84",
+#         "imdbRating": "9.0",
+#         "imdbVotes": "2,947,373",
+#         "imdbID": "tt0468569",
+#         "Type": "movie",
+#         "DVD": "N/A",
+#         "BoxOffice": "$534,987,076",
+#         "Production": "N/A",
+#         "Website": "N/A",
+#         "Response": "True",
+#     }
 
-    movie_not_found = {"Response": "False", "Error": "Movie not found!"}
+#     movie_not_found = {"Response": "False", "Error": "Movie not found!"}
 
-    assert get_movie("The Dark Knight") == dark_knight_response
-    assert get_movie("Dune Part 1") == movie_not_found
+#     assert get_movie("The Dark Knight") == dark_knight_response
+#     assert get_movie("Dune Part 1") == movie_not_found

@@ -1,3 +1,5 @@
+from typing import Any
+
 from flask import render_template
 
 ERROR_MESSAGES = {
@@ -11,7 +13,15 @@ ERROR_MESSAGES = {
 }
 
 
-def register_error_handlers(app):
+def register_error_handlers(app) -> None:
+    """
+    Registers custom error handlers for various HTTP error codes.
+
+    This function maps each error code in the `ERROR_MESSAGES` dictionary to
+    the `render_error_page` function, allowing for custom error page rendering.
+
+    :param app: The Flask application object.
+    """
     # Register handlers for each error code
     for code in ERROR_MESSAGES:
         if isinstance(code, int):  # Only register numeric HTTP codes
@@ -21,9 +31,16 @@ def register_error_handlers(app):
     app.register_error_handler(Exception, render_error_page)
 
 
-def render_error_page(e):
+def render_error_page(e) -> tuple[str, Any | int]:
+    """
+    Registers custom error handlers for various HTTP error codes.
+
+    This function maps each error code in the `ERROR_MESSAGES` dictionary to
+    the `render_error_page` function, allowing for custom error page rendering.
+
+    :param app: The Flask application object.
+    """
     """Generic error page renderer."""
-    print("RENDER ERROR PAGE")
     code = getattr(e, "code", 500)
     error_msg = ERROR_MESSAGES.get(code, ERROR_MESSAGES["default"])
     return render_template(

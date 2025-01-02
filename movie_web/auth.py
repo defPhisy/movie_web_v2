@@ -2,6 +2,7 @@ import functools
 
 from flask import (
     Blueprint,
+    Response,
     abort,
     flash,
     g,
@@ -13,6 +14,7 @@ from flask import (
 )
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash
+from werkzeug.wrappers.response import Response  # noqa: F811
 
 from movie_web import db_manager
 from movie_web.db_models import User, db
@@ -21,7 +23,13 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @bp.route("/register", methods=("GET", "POST"))
-def register():
+def register() -> Response | str:
+    """
+    Handle user registration.
+
+    :return: A Flask response or rendered registration template.
+    :rtype: flask.Response
+    """
     if request.method == "POST":
         username = request.form["username"].strip()
         password = request.form["password"]
@@ -50,7 +58,13 @@ def register():
 
 
 @bp.route("/login", methods=("GET", "POST"))
-def login():
+def login() -> Response | str:
+    """
+    Handle user login.
+
+    :return: A Flask response or rendered login template.
+    :rtype: flask.Response
+    """
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -75,7 +89,12 @@ def login():
 
 
 @bp.before_app_request
-def load_logged_in_user():
+def load_logged_in_user() -> None:
+    """
+    Load the logged-in user into the global object.
+
+    :return: None
+    """
     user_id = session.get("user_id")
 
     if user_id is None:
@@ -85,12 +104,27 @@ def load_logged_in_user():
 
 
 @bp.route("/logout")
-def logout():
+def logout() -> Response:
+    """
+    Log out the current user.
+
+    :return: A redirect to the index page.
+    :rtype: flask.Response
+    """
     session.clear()
     return redirect(url_for("index"))
 
 
 def login_required(view):
+    """
+    Decorator to enforce login requirement for a view.
+
+    :param view: The view function to wrap.
+    :type view: callable
+    :return: Wrapped view function.
+    :rtype: callable
+    """
+
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
