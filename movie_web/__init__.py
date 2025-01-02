@@ -48,6 +48,10 @@ def create_app(test_config=None):
 
     error.register_error_handlers(app)
 
+    # # run only once for dummy data population
+    # with app.app_context():
+    #     db_manager.populate_dummy_data()
+
     @app.context_processor
     def inject_fontawesome_key():
         return dict(fontawesome_key=font_awesome_key)
