@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 
 from flask import (
     Blueprint,
@@ -15,7 +15,7 @@ import movie_web.db_manager as db_manager
 import movie_web.omdb_api as omdb_api
 import movie_web.utils as utils
 from movie_web.auth import login_required
-from movie_web.db_models import Review, User, db
+from movie_web.db_models import User, db
 
 bp = Blueprint("blog", __name__)
 
@@ -165,13 +165,7 @@ def add_review(movie_id):
         abort(404)
 
     if request.method == "POST":
-        new_review = Review(
-            user_id=g.user.id,  # type: ignore
-            movie_id=movie_id,  # type: ignore
-            text=request.form["text"],  # type: ignore
-            rating=request.form["rating"],  # type: ignore
-            created=datetime.now(timezone.utc),  # type: ignore
-        )
+        new_review = db_manager.create_review(g.user, movie_id)
 
         db_manager.add_review(new_review)
         flash(f"New Review by {g.user.user_name} created!", category="info")
@@ -224,8 +218,8 @@ def delete_user(user_id):
     print("HERE")
     user = db.session.get(User, user_id)
 
-    user_name = user.user_name
-    if user.id != g.user.id:
+    user_name = user.user_name  # type: ignore
+    if user.id != g.user.id:  # type: ignore
         abort(403)
 
     db_manager.delete_user(user)
