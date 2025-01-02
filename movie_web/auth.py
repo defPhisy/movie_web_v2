@@ -54,9 +54,10 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        # db = get_db()
+
         error = None
-        user = db.manager.get_user_by_name(username)
+
+        user = db_manager.get_user_by_name(username)
 
         if user is None:
             error = "Incorrect username."
@@ -94,7 +95,7 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             abort(401)
-            # return redirect(url_for("auth.login"))
+            return redirect(url_for("auth.login"))
 
         return view(**kwargs)
 
