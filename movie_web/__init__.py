@@ -13,12 +13,14 @@ DB_PATH = os.path.join(ROOT_PATH, DB_FOLDER, DB_NAME)
 
 load_dotenv()
 font_awesome_key = os.getenv("FONT_AWESOME_KEY")
+print("KEY:", font_awesome_key)
+flask_secret_key = os.getenv("FLASK_SECRET_KEY")
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY="dev",
+        SECRET_KEY=flask_secret_key,
         SQLALCHEMY_DATABASE_URI=f"sqlite:///{DB_PATH}",
     )
 

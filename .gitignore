@@ -1,4 +1,7 @@
 # cspell: disable
+
+.env
+secret_key_gen/
 # Created by https://www.toptal.com/developers/gitignore/api/flask,python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=flask,python,visualstudiocode
 /design
@@ -6,7 +9,7 @@
 instance/*
 !instance/.gitignore
 .webassets-cache
-.env
+
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
