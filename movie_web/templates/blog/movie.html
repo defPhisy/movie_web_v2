@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+
+
+{% block content %}
+<article style="background-image: url('{{ movie.poster_link }}');">
+
+    <div class="movie-card">
+
+        <div class="movie-nav">
+
+            <!-- Update Button -->
+            <form action="{{ url_for('blog.update_movie', movie_id=movie.id) }}" method="get">
+                <button class="button" type="submit">
+                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            <!-- Refresh Button -->
+            <form action="{{ url_for('blog.refresh_movie', movie_id=movie.id) }}" method="post">
+                <button class="button" type="submit">
+                    <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            <!-- Delete Button -->
+            <form action="{{ url_for('blog.delete_movie', movie_id=movie.id) }}" method="post">
+                <button class="button danger" type="submit"
+                    onclick="return confirm('Do you want to delete this movie?')">
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+
+
+        <div class="movie-title">
+            <h1> {{ movie.title }} </h1>
+        </div>
+
+        <span class="movie-year">{{ movie.year }}</span>
+
+        <div class="rating">
+            <span class="imdb-rating">
+                {# Full stars #}
+                {% for _ in range(stars.full) %}
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                {% endfor %}
+
+                {# Half star #}
+                {% if stars.half %}
+                <i class="fa-regular fa-star-half-stroke" aria-hidden="true"></i>
+                {% endif %}
+
+                {# Empty stars #}
+                {% for _ in range(stars.empty) %}
+                <i class="fa-regular fa-star" aria-hidden="true"></i>
+                {% endfor %}
+            </span>
+        </div>
+
+        <div class="details">
+
+            <div class="genre">
+                {% for genre in genres %}
+                <span>{{ genre }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="creators">
+                <div class="key">
+                    <p>Stars:</p>
+                    <p>Director:</p>
+                    <p>Writer:</p>
+                </div>
+
+                <div class="value">
+                    <p>{{ movie.stars }}</p>
+                    <p>{{ movie.director }}</p>
+                    <p>{{ movie.writer }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="https://www.imdb.com/title/{{ movie.imdb_id}}"><button class="button"><i
+                        class="fa-solid fa-film"></i></button></a>
+        </div>
+
+        <p class="plot">{{ movie.plot }}</p>
+    </div>
+
+</article>
+
+<section class="reviews">
+
+    <!-- Add Review Button appears only when user has not reviewed movie yet -->
+    <div class="new-review">
+        {% if not user_review %}
+        <form action="{{ url_for('blog.add_review', movie_id=movie['id']) }}" method="get">
+            <button class="button" type="submit">Add Review</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- Review Rating Stars -->
+    {% for review in movie.reviews %}
+    {% set review_num = 1 %}
+    <div class="review">
+        <header>
+            <div class="user">
+                <i class="fa-solid fa-circle-user"></i>
+                <h2>{{ review.user.user_name }}</h2>
+            </div>
+
+            <span class="user-rating">
+
+                <!-- Full Stars -->
+                {% set full_stars = review.rating // 1 %}
+                {% for _ in range(full_stars | int) %}
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                {% endfor %}
+
+                <!-- Half Stars -->
+                {% if review.rating % 1 >= 0.5 %}
+                {% set half_star = 1 %}
+                {% else %}
+                {% set half_star = 0 %}
+                {% endif %}
+                {% if half_star == 1 %}
+                <i class="fa-regular fa-star-half-stroke" aria-hidden="true"></i>
+                {% endif %}
+
+                <!-- Empty Stars -->
+                {% set empty_stars = 5 - (full_stars + half_star) %}
+                {% for _ in range(empty_stars | int) %}
+                <i class="fa-regular fa-star" aria-hidden="true"></i>
+                {% endfor %}
+            </span>
+
+            <div class="review-nav">
+
+                {% if user_review and review.user.id == g.user.id %}
+                <!-- Update Review Button -->
+                <form action="{{ url_for('blog.update_review', review_id=review.id) }}" method="get">
+                    <button class="button" type="submit">
+                        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                    </button>
+                </form>
+
+                <!-- Delete Review Button -->
+                <form action="{{ url_for('blog.delete_review', review_id=review.id) }}" method="post">
+                    <button class="button danger" type="submit"
+                        onclick="return confirm('Do you want to delete this movie?')">
+                        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                    </button>
+                </form>
+                {% endif %}
+
+            </div>
+
+        </header>
+
+
+
+        <i class="fa-solid fa-quote-left"></i>
+        <p>{{ review.text }}</p>
+    </div>
+    {% set review_num = review_num + 1 %}
+
+    {% if review_num == reviews | length %}
+    <div class="divider"></div>
+    {% endif %}
+
+    {% endfor %}
+
+</section>
+{% endblock %}

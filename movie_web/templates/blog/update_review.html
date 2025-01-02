@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form class="update-form" method="post">
+    <h1>{% block title %}Edit Review from {{ movie['title'] }}{% endblock %}</h1>
+
+    <label for="text">Review</label>
+    <textarea name="text" id="text" required>{{ request.form['text'] or review['text'] }}</textarea>
+
+    <label for="rating">Rating</label>
+    <input name="rating" id="rating" type="number" min="0" max="5" step="0.5"
+        value="{{ request.form['rating'] or review['rating'] }}" required>
+
+    <input class="button" type="submit" value="Save">
+
+</form>
+{% endblock %}
