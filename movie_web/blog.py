@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from flask import (
     Blueprint,
+    abort,
     flash,
     g,
     redirect,
@@ -76,8 +77,12 @@ def create():
 
 
 @bp.route("/movie/<int:movie_id>")
+@login_required
 def movie_details(movie_id):
     movie = db_manager.get_movie_by_id(movie_id)
+    if movie is None:
+        abort(404)
+
     user_review = next(
         (review for review in g.user.reviews if review.movie_id == movie_id),
         None,
@@ -98,6 +103,8 @@ def movie_details(movie_id):
 @login_required
 def update_movie(movie_id):
     movie = db_manager.get_movie_by_id(movie_id)
+    if movie is None:
+        abort(404)
     g.now = datetime.now()
 
     if request.method == "POST":
@@ -108,7 +115,7 @@ def update_movie(movie_id):
         else:
             db_manager.update_movie(movie, request.form)
             db.session.commit()
-            return redirect(url_for("blog.movie_details", movie_id=movie.id)) # type: ignore
+            return redirect(url_for("blog.movie_details", movie_id=movie.id))  # type: ignore
 
     return render_template(
         "blog/update.html",
@@ -121,6 +128,8 @@ def update_movie(movie_id):
 @login_required
 def delete_movie(movie_id):
     movie = db_manager.get_movie_by_id(movie_id)
+    if movie is None:
+        abort(404)
 
     g.user.movies.remove(movie)
     db.session.commit()
@@ -132,8 +141,12 @@ def delete_movie(movie_id):
 
 
 @bp.route("/movie/<int:movie_id>/refresh", methods=("POST",))
+@login_required
 def refresh_movie(movie_id):
     movie = db_manager.get_movie_by_id(movie_id)
+    if movie is None:
+        abort(404)
+
     imdb_id = movie.imdb_id  # type: ignore
 
     requested_movie = omdb_api.get_movie(imdb_id=imdb_id)
@@ -141,12 +154,15 @@ def refresh_movie(movie_id):
 
     db_manager.refresh_movie(movie, refreshed_movie)
 
-    return redirect(url_for("blog.movie_details", movie_id=movie.id)) # type: ignore
+    return redirect(url_for("blog.movie_details", movie_id=movie.id))  # type: ignore
 
 
 @bp.route("/movie/<int:movie_id>/review", methods=("GET", "POST"))
+@login_required
 def add_review(movie_id):
     movie = db_manager.get_movie_by_id(movie_id)
+    if movie is None:
+        abort(404)
 
     if request.method == "POST":
         new_review = Review(
@@ -166,34 +182,37 @@ def add_review(movie_id):
 
 
 @bp.route("/review/<int:review_id>/update", methods=("GET", "POST"))
+@login_required
 def update_review(review_id):
     review = db_manager.get_review_by_id(review_id)
+    if review is None:
+        abort(404)
+
+    movie = db_manager.get_movie_by_id(review.movie_id)
     g.now = datetime.now()
 
     if request.method == "POST":
         db_manager.update_review(review)
 
         return redirect(
-            url_for("blog.movie_details", movie_id=review.movie_id) # type: ignore
+            url_for("blog.movie_details", movie_id=review.movie_id)  # type: ignore
         )
 
     return render_template(
-        "blog/update_review.html",
-        review=review,
+        "blog/update_review.html", review=review, movie=movie
     )
 
 
 @bp.route("/review/<int:review_id>/delete", methods=("POST",))
+@login_required
 def delete_review(review_id):
     review = db_manager.get_review_by_id(review_id)
+
+    if review is None:
+        abort(404)
+
     db_manager.delete_review(review)
-    flash(f"Deleted Review from {g.user.user_name}!", category="delete")
+    message = f"Deleted Review from {g.user.user_name}!"
+    flash(message, category="delete")
 
-    return redirect(url_for("blog.movie_details", movie_id=review.movie_id)) # type: ignore
-
-
-@bp.route("/review/<int:review_id>/like", methods=("POST",))
-def like_review(review_id):
-    review = db_manager.get_review_by_id(review_id)
-
-    return redirect(url_for("blog.movie_details", movie_id=review.movie_id)) # type: ignore
+    return redirect(url_for("blog.movie_details", movie_id=review.movie_id))  # type: ignore

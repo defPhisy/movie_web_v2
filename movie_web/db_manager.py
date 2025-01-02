@@ -122,7 +122,7 @@ def update_review(review):
         setattr(review, key, value)
     db.session.commit()
 
+
 def delete_review(review):
     db.session.delete(review)
     db.session.commit()
-    

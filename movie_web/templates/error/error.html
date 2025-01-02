@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="error-card">
+    <h1>Error {{ error_code }}</h1>
+    <p class="error">{{error_msg}}</p>
+    {% if error_code == 401 %}
+    <a href="/auth/login" class="button">Login</a>
+    {% else %}
+    <a href="/" class="button">Home</a>
+    {% endif %}
+</div>
+{% endblock %}

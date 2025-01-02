@@ -158,14 +158,6 @@
                         <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
                     </button>
                 </form>
-
-                {% else %}
-                <form action="{{ url_for('blog.like_review', review_id=review.id) }}" method="get">
-                    <button class="button" type="submit">
-                        <i class="fa-regular fa-heart" aria-hidden="true"></i>
-                    </button>
-                </form>
-
                 {% endif %}
 
             </div>
