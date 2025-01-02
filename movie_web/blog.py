@@ -15,7 +15,7 @@ import movie_web.db_manager as db_manager
 import movie_web.omdb_api as omdb_api
 import movie_web.utils as utils
 from movie_web.auth import login_required
-from movie_web.db_models import Review, db
+from movie_web.db_models import Review, User, db
 
 bp = Blueprint("blog", __name__)
 
@@ -216,3 +216,20 @@ def delete_review(review_id):
     flash(message, category="delete")
 
     return redirect(url_for("blog.movie_details", movie_id=review.movie_id))  # type: ignore
+
+
+@bp.route("/user/<int:user_id>/delete", methods=("POST",))
+@login_required
+def delete_user(user_id):
+    print("HERE")
+    user = db.session.get(User, user_id)
+
+    user_name = user.user_name
+    if user.id != g.user.id:
+        abort(403)
+
+    db_manager.delete_user(user)
+    message = f"User {user_name} successfully deleted!"
+    flash(message, category="delete")
+
+    return redirect(url_for("blog.index"))

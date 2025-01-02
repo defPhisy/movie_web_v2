@@ -134,3 +134,8 @@ def create_user(username, password):
     new_user = User(user_name=username, password=hashed_pw)  # type: ignore
     db.session.add(new_user)
     db.session.commit()
+
+
+def delete_user(user):
+    db.session.delete(user)
+    db.session.commit()

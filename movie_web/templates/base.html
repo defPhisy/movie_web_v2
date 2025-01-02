@@ -25,8 +25,20 @@
                     </li>
                     {% if g.user %}
                     <li><span>{{ g.user['username'] }}</span>
-                    <li class="button danger"><a href="{{ url_for('auth.logout') }}">Log Out</a>
-                        {% else %}
+                    <li class="button danger"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+
+
+                    <div>
+                        <form action="{{ url_for('blog.delete_user', user_id=g.user.id) }}" method="post">
+                            <button class="button danger" type="submit"
+                                onclick="return confirm('Do you want to delete this movie?')">
+                                DELETE USER <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </div>
+
+
+                    {% else %}
                     <li><a class="button" href="{{ url_for('auth.register') }}">Register</a>
                     <li><a class="button" href="{{ url_for('auth.login') }}">Log In</a>
                         {% endif %}
