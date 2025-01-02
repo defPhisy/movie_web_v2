@@ -3,6 +3,7 @@ from typing import Sequence
 from flask import request
 from sqlalchemy import select
 from sqlalchemy.inspection import inspect
+from werkzeug.security import generate_password_hash
 
 from movie_web.db_models import Movie, Review, User, db
 
@@ -125,4 +126,11 @@ def update_review(review):
 
 def delete_review(review):
     db.session.delete(review)
+    db.session.commit()
+
+
+def create_user(username, password):
+    hashed_pw = generate_password_hash(password)
+    new_user = User(user_name=username, password=hashed_pw)  # type: ignore
+    db.session.add(new_user)
     db.session.commit()

@@ -12,9 +12,9 @@ from flask import (
     url_for,
 )
 from sqlalchemy.exc import IntegrityError
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 
-from movie_web.db_manager import get_user_by_name
+from movie_web import db_manager
 from movie_web.db_models import User, db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -25,7 +25,7 @@ def register():
     if request.method == "POST":
         username = request.form["username"].strip()
         password = request.form["password"]
-        # db = get_db()
+
         error = None
 
         if not username:
@@ -35,14 +35,13 @@ def register():
 
         if error is None:
             try:
-                hashed_pw = generate_password_hash(password)
-                new_user = User(user_name=username, password=hashed_pw)  # type: ignore
-                db.session.add(new_user)
-                db.session.commit()
+                db_manager.create_user(username, password)
             except IntegrityError:
                 error = f"User {username} is already registered."
                 db.session.rollback()
             else:
+                message = f"User {username} successfully created!"
+                flash(message=message, category="info")
                 return redirect(url_for("auth.login"))
 
         flash(message=error, category="error")
@@ -57,7 +56,7 @@ def login():
         password = request.form["password"]
         # db = get_db()
         error = None
-        user = get_user_by_name(username)
+        user = db.manager.get_user_by_name(username)
 
         if user is None:
             error = "Incorrect username."
