@@ -7,13 +7,17 @@
 
 
 {% block content %}
-<form name="add_movie" method="post">
+
+<form class="update-form" name="add_movie" method="post">
+    <p>Enter the full movie name, optionally including the release year, or provide the IMDb ID. For the best results,
+        use
+        the IMDb ID, which will always take priority if provided.</p>
     <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}">
+    <input name="title" id="title" value="{{ request.form['title'] }}" placeholder="The Dark Knight">
     <label for="year">Year</label>
-    <input name="year" id="year" value="{{ request.form['year'] }}">
+    <input name="year" id="year" value="{{ request.form['year'] }}" placeholder="2008">
     <label for="imdb_id">IMDB-ID</label>
-    <input name="imdb_id" id="imdb_id" value="{{ request.form['imdb_id'] }}">
-    <input type="submit" value="Get Movie">
+    <input name="imdb_id" id="imdb_id" value="{{ request.form['imdb_id'] }}" placeholder="tt0468569">
+    <input class="button" type="submit" value="Get Movie">
 </form>
 {% endblock %}

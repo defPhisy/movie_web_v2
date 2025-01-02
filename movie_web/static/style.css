@@ -220,7 +220,8 @@ article {
   margin-block-end: 3rem;
   padding: 2rem;
   padding-block-start: 1em;
-  background: linear-gradient(rgb(20, 20, 20), #050505);
+  background: linear-gradient(#151515, var(--dark-bg));
+  background: rgb(16, 16, 16);
   border-radius: 0 0 0.5em 0.5em;
   max-width: var(--card-width);
   margin-inline: auto;
@@ -385,6 +386,11 @@ article {
   gap: 1rem;
   color: var(--yellow-bg);
   padding-block-end: 4rem;
+
+  p {
+    color: #c8c8c8;
+    font-size: 1.2rem;
+  }
 
   input {
     padding-inline: 1rem;
