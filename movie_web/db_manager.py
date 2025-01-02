@@ -3,11 +3,12 @@ from typing import Sequence
 
 from flask import request
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
+
+# from sqlalchemy.exc import IntegrityError
 from sqlalchemy.inspection import inspect
 from werkzeug.security import generate_password_hash
 
-from movie_web import dummy_data, omdb_api
+# from movie_web import dummy_data, omdb_api
 from movie_web.db_models import Movie, Review, User, db
 
 REQUIRED_MOVIE_KEYS = [column.key for column in inspect(Movie).attrs][3:]  # type: ignore
@@ -255,63 +256,63 @@ def delete_user(user: User) -> None:
     db.session.commit()
 
 
-def populate_dummy_data() -> None:
-    """
-    Populate the database with dummy data, including movies, users, and reviews.
-    """
-    # Populate movies
-    for imdb_id in dummy_data.imdb_ids:
-        omdb_response = omdb_api.get_movie(imdb_id=imdb_id)
-        movie = serialize_omdb_movie(omdb_response)
-        try:
-            add_movie(movie)
-        except IntegrityError:
-            db.session.rollback()
-            print(f"Movie with IMDb ID {imdb_id} already exists. Skipping...")
+# def populate_dummy_data() -> None:
+#     """
+#     Populate the database with dummy data, including movies, users, and reviews.
+#     """
+#     # Populate movies
+#     for imdb_id in dummy_data.imdb_ids:
+#         omdb_response = omdb_api.get_movie(imdb_id=imdb_id)
+#         movie = serialize_omdb_movie(omdb_response)
+#         try:
+#             add_movie(movie)
+#         except IntegrityError:
+#             db.session.rollback()
+#             print(f"Movie with IMDb ID {imdb_id} already exists. Skipping...")
 
-    # Populate users and assign movies
-    for user_data in dummy_data.users:
-        if get_user_by_name(user_data["user_name"]):
-            continue
-        user = create_user(user_data["user_name"], user_data["password"])
+#     # Populate users and assign movies
+#     for user_data in dummy_data.users:
+#         if get_user_by_name(user_data["user_name"]):
+#             continue
+#         user = create_user(user_data["user_name"], user_data["password"])
 
-        for imdb_id in dummy_data.imdb_ids:
-            movie = get_movie_by_imdb_id(imdb_id)  # type: ignore
-            add_movie_to_user(user, movie)  # type: ignore
+#         for imdb_id in dummy_data.imdb_ids:
+#             movie = get_movie_by_imdb_id(imdb_id)  # type: ignore
+#             add_movie_to_user(user, movie)  # type: ignore
 
-    # Populate reviews
-    for user_reviews in dummy_data.reviews:
-        for review_data in user_reviews:
-            # Check for existing review
-            if get_review_by_user_and_movie(
-                review_data["user_id"], review_data["movie_id"]
-            ):
-                print(
-                    f"Review by user {review_data['user_id']} for movie {review_data['movie_id']} already exists. Skipping..."
-                )
-                continue
+#     # Populate reviews
+#     for user_reviews in dummy_data.reviews:
+#         for review_data in user_reviews:
+#             # Check for existing review
+#             if get_review_by_user_and_movie(
+#                 review_data["user_id"], review_data["movie_id"]
+#             ):
+#                 print(
+#                     f"Review by user {review_data['user_id']} for movie {review_data['movie_id']} already exists. Skipping..."
+#                 )
+#                 continue
 
-            review = Review(
-                user_id=review_data["user_id"],  # type: ignore
-                movie_id=review_data["movie_id"],  # type: ignore # type: ignore
-                text=review_data["text"],  # type: ignore # type: ignore
-                rating=review_data["rating"],  # type: ignore
-                created=review_data["created"],  # type: ignore
-                updated=review_data["updated"],  # type: ignore
-            )
+#             review = Review(
+#                 user_id=review_data["user_id"],  # type: ignore
+#                 movie_id=review_data["movie_id"],  # type: ignore # type: ignore
+#                 text=review_data["text"],  # type: ignore # type: ignore
+#                 rating=review_data["rating"],  # type: ignore
+#                 created=review_data["created"],  # type: ignore
+#                 updated=review_data["updated"],  # type: ignore
+#             )
 
-            try:
-                add_review(review)
-            except IntegrityError:
-                db.session.rollback()
-                print(
-                    f"Error adding review for movie {review_data['movie_id']} by user {review_data['user_id']}. Skipping..."
-                )
+#             try:
+#                 add_review(review)
+#             except IntegrityError:
+#                 db.session.rollback()
+#                 print(
+#                     f"Error adding review for movie {review_data['movie_id']} by user {review_data['user_id']}. Skipping..."
+#                 )
 
 
-def get_review_by_user_and_movie(user_id, movie_id):
-    return (
-        db.session.query(Review)
-        .filter_by(user_id=user_id, movie_id=movie_id)
-        .first()
-    )
+# def get_review_by_user_and_movie(user_id, movie_id):
+#     return (
+#         db.session.query(Review)
+#         .filter_by(user_id=user_id, movie_id=movie_id)
+#         .first()
+#     )
