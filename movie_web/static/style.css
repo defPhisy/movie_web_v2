@@ -23,6 +23,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-family: "Roboto";
+  background-color: rgb(20, 20, 20);
 }
 
 img,
@@ -56,16 +57,6 @@ a {
   &:hover {
     color: rgb(9, 9, 9);
   }
-}
-
-.background {
-  background: linear-gradient(
-    rgba(255, 194, 95, 0.795) 0%,
-    rgba(0, 0, 0, 0.968) 80%
-  );
-
-  min-height: 100vh;
-  background: rgb(20, 20, 20);
 }
 
 nav {

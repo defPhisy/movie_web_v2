@@ -14,56 +14,56 @@
 </head>
 
 <body>
-    <div class="background">
-
-        <nav>
-            <div class="nav-container">
-                <ul>
-                    <li>
-                        <a href="{{ url_for('blog.index')}}" class="home"><i class="fa-solid fa-circle-user"></i> {{
-                            g.user.user_name }}</a>
-                    </li>
-                    {% if g.user %}
-                    <li><span>{{ g.user['username'] }}</span>
-                    <li class="button danger"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
 
 
-                    <div>
-                        <form action="{{ url_for('blog.delete_user', user_id=g.user.id) }}" method="post">
-                            <button class="button danger" type="submit"
-                                onclick="return confirm('Do you want to delete this movie?')">
-                                DELETE USER <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </div>
+    <nav>
+        <div class="nav-container">
+            <ul>
+                <li>
+                    <a href="{{ url_for('blog.index')}}" class="home"><i class="fa-solid fa-circle-user"></i> {{
+                        g.user.user_name }}</a>
+                </li>
+                {% if g.user %}
+                <li><span>{{ g.user['username'] }}</span>
+                <li class="button danger"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
 
 
-                    {% else %}
-                    <li><a class="button" href="{{ url_for('auth.register') }}">Register</a>
-                    <li><a class="button" href="{{ url_for('auth.login') }}">Log In</a>
-                        {% endif %}
-                </ul>
-                <div class="login-form">
-                    {% block login %}{% endblock %}
+                <div>
+                    <form action="{{ url_for('blog.delete_user', user_id=g.user.id) }}" method="post">
+                        <button class="button danger" type="submit"
+                            onclick="return confirm('Do you want to delete this movie?')">
+                            DELETE USER <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                        </button>
+                    </form>
                 </div>
+
+
+                {% else %}
+                <li><a class="button" href="{{ url_for('auth.register') }}">Register</a>
+                <li><a class="button" href="{{ url_for('auth.login') }}">Log In</a>
+                    {% endif %}
+            </ul>
+            <div class="login-form">
+                {% block login %}{% endblock %}
             </div>
+        </div>
 
 
-        </nav>
-        <section class="content">
-            <header>
-                {% block header %}{% endblock %}
-            </header>
-            {% for category, message in get_flashed_messages(with_categories=True) %}
+    </nav>
+    <section class="content">
+        <header>
+            {% block header %}{% endblock %}
+        </header>
+        {% for category, message in get_flashed_messages(with_categories=True) %}
 
-            <div class="flash {{ category }}">{{ message }}</div>
+        <div class="flash {{ category }}">{{ message }}</div>
 
 
 
-            {% endfor %}
-            {% block content %}{% endblock %}
-        </section>
-    </div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </section>
+
 </body>
 
 </html>
